@@ -1,3 +1,28 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
 
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --dark: #0A0A0B;
+  --dark-2: #111113;
+  --dark-3: #1A1A1E;
+  --dark-4: #242428;
+  --border: rgba(201, 168, 76, 0.15);
+  --text: #F0EDE8;
+  --text-muted: #8A8680;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: var(--dark);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--dark-2); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
 
