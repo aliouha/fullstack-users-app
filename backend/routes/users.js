@@ -8,7 +8,10 @@ const {
   deleteUser
 } = require('../controllers/usersController');
 
-router.get('/', auth, getUsers);
+// Route publique : GET tous les utilisateurs (accessible sans token)
+router.get('/', getUsers);
+
+// Routes protégées (nécessitent un token valide)
 router.post('/', auth, createUser);
 router.put('/:id', auth, updateUser);
 router.delete('/:id', auth, deleteUser);
