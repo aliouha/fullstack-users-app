@@ -18,13 +18,13 @@ jobs:
     - name: Deploy Backend
       run: |
         cd ~/fullstack-users-app/backend
-        npm ci
+        npm install --prefer-offline
         pm2 restart backend || pm2 start server.js --name "backend"
 
     - name: Deploy Frontend
       run: |
         cd ~/fullstack-users-app/frontend
-        npm ci
+        npm install --prefer-offline
         npm run build
 
     - name: Restart Nginx
