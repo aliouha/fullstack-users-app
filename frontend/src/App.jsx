@@ -3,7 +3,7 @@ import Navbar from './components/Navbar'
 import UserCard from './components/UserCard'
 import UserModal from './components/UserModal'
 
-const API = 'http://localhost:5000/api/users'
+const API = 'http://192.168.1.14/api/users'
 
 export default function App() {
   const [users, setUsers] = useState([])
