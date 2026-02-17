@@ -77,7 +77,7 @@ export default function App() {
 
         {users.length === 0 && (
           <div className="text-center text-gray-400 mt-20 text-lg">
-            Aucun utilisateur pour l'instant. Cliquez sur "+ Ajouter" !
+            Je teste Aucun utilisateur pour l'instant. Cliquez sur "+ Ajouter" !
           </div>
         )}
       </main>
