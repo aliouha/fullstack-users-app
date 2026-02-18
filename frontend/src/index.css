@@ -2,14 +2,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
 
 :root {
-  --gold: #C9A84C;
-  --gold-light: #E8C97A;
-  --bg: #F9F7F4;
+  --primary: #4A90E2;
+  --primary-light: #7BB0F0;
+  --primary-soft: #E6F0FF;
+  --bg: #F8FAFF;
   --card-bg: #FFFFFF;
-  --text: #1E1E1E;
-  --text-muted: #6B6B6B;
-  --border: rgba(0,0,0,0.05);
-  --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+  --text: #1E2A3A;
+  --text-muted: #5A6B7C;
+  --border: rgba(74, 144, 226, 0.2);
+  --shadow: 0 10px 30px -10px rgba(74,144,226,0.2);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,7 +24,7 @@ body {
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f0f0f0; }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
 
 /* Grille responsive */
 .user-grid {

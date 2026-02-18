@@ -8,62 +8,72 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       style={{
-        background: 'rgba(255,255,255,0.8)',
+        background: 'rgba(255,255,255,0.9)',
         backdropFilter: 'blur(20px)',
-        borderBottom: '1px solid rgba(201,168,76,0.2)',
+        borderBottom: '1px solid var(--border)',
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        padding: '0 2rem',
-        height: '70px',
+        padding: '0.8rem 2rem',
         display: 'flex',
+        flexWrap: 'wrap',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: '1rem',
       }}
     >
-      {/* Logo + message animé */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-        <motion.div
-          style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-          whileHover={{ scale: 1.02 }}
-        >
-          <div style={{
-            width: '36px', height: '36px',
-            background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
-            borderRadius: '8px',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '16px', fontWeight: '700', color: '#FFFFFF'
-          }}>U</div>
-          <span style={{
-            fontFamily: 'Cormorant Garamond, serif',
-            fontSize: '1.4rem', fontWeight: '500',
-            color: '#1E1E1E', letterSpacing: '0.05em'
-          }}>UserManager</span>
-        </motion.div>
+      {/* Logo */}
+      <motion.div
+        style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
+        whileHover={{ scale: 1.02 }}
+      >
+        <div style={{
+          width: '36px', height: '36px',
+          background: 'linear-gradient(135deg, var(--primary), var(--primary-light))',
+          borderRadius: '8px',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '16px', fontWeight: '700', color: '#FFFFFF'
+        }}>U</div>
+        <span style={{
+          fontFamily: 'Cormorant Garamond, serif',
+          fontSize: '1.4rem', fontWeight: '500',
+          color: 'var(--text)', letterSpacing: '0.05em'
+        }}>UserManager</span>
+      </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
+      {/* Message de bienvenue animé (centré) */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        style={{
+          flex: 1,
+          textAlign: 'center',
+          minWidth: '200px',
+        }}
+      >
+        <motion.span
+          animate={{
+            color: ['#4A90E2', '#7BB0F0', '#4A90E2'],
+          }}
+          transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
           style={{
-            background: 'rgba(201,168,76,0.1)',
-            padding: '6px 14px',
+            background: 'rgba(74,144,226,0.08)',
+            padding: '6px 18px',
             borderRadius: '30px',
-            border: '1px solid rgba(201,168,76,0.3)',
+            border: '1px solid var(--border)',
+            fontSize: '0.9rem',
+            fontWeight: '500',
+            display: 'inline-block',
+            whiteSpace: 'nowrap',
           }}
         >
-          <motion.span
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ repeat: Infinity, duration: 2 }}
-            style={{ color: 'var(--gold)', fontSize: '0.85rem', fontWeight: '500' }}
-          >
-            ✦ Bienvenue sur mon réseau ✦
-          </motion.span>
-        </motion.div>
-      </div>
+          ✦ Bienvenue sur mon réseau ✦
+        </motion.span>
+      </motion.div>
 
-      {/* Boutons d'authentification */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+      {/* Boutons d'authentification avec icônes */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', justifyContent: 'center' }}>
         {user ? (
           <>
             <span style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
@@ -75,8 +85,8 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
               onClick={onLogout}
               style={{
                 background: 'transparent',
-                border: '1px solid rgba(201,168,76,0.3)',
-                color: 'var(--gold)',
+                border: '1px solid var(--border)',
+                color: 'var(--primary)',
                 padding: '8px 20px',
                 borderRadius: '6px',
                 cursor: 'pointer',
@@ -84,7 +94,7 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
                 fontFamily: 'DM Sans, sans-serif',
               }}
             >
-              Déconnexion
+              🚪 Déconnexion
             </motion.button>
           </>
         ) : (
@@ -101,16 +111,19 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
                 cursor: 'pointer',
                 fontSize: '0.85rem',
                 fontFamily: 'DM Sans, sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
               }}
             >
-              Connexion
+              🔑 Connexion
             </motion.button>
             <motion.button
-              whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(201,168,76,0.3)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(74,144,226,0.3)' }}
               whileTap={{ scale: 0.95 }}
               onClick={onRegister}
               style={{
-                background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
+                background: 'linear-gradient(135deg, var(--primary), var(--primary-light))',
                 border: 'none',
                 color: '#FFFFFF',
                 padding: '8px 20px',
@@ -119,9 +132,12 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
                 fontSize: '0.85rem',
                 fontWeight: '500',
                 fontFamily: 'DM Sans, sans-serif',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
               }}
             >
-              S'inscrire
+              ✍️ S'inscrire
             </motion.button>
           </>
         )}

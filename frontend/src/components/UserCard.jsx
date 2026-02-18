@@ -1,15 +1,22 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
+const BASE_URL = 'http://192.168.1.14' // À adapter si besoin
+
 export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
   const [showMenu, setShowMenu] = useState(false)
+
+  // Construire l'URL complète de la photo si elle est relative
+  const photoUrl = user.photo && user.photo.startsWith('http')
+    ? user.photo
+    : user.photo ? `${BASE_URL}${user.photo}` : null
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
-      whileHover={{ y: -8, boxShadow: '0 25px 40px -15px rgba(201,168,76,0.3)' }}
+      whileHover={{ y: -8, boxShadow: '0 25px 40px -15px var(--primary)' }}
       style={{
         background: 'var(--card-bg)',
         borderRadius: '20px',
@@ -19,13 +26,13 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
         alignItems: 'center',
         gap: '1rem',
         position: 'relative',
-        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)',
-        border: '1px solid rgba(201,168,76,0.2)',
+        boxShadow: 'var(--shadow)',
+        border: '1px solid var(--border)',
         transform: 'perspective(1000px) rotateX(2deg)',
         transition: 'transform 0.2s, box-shadow 0.2s',
       }}
     >
-      {/* Menu trois points (si autorisé) */}
+      {/* Menu trois points */}
       {canEdit && (
         <div style={{ position: 'absolute', top: '15px', right: '15px' }}>
           <motion.button
@@ -37,7 +44,7 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
               border: 'none',
               cursor: 'pointer',
               fontSize: '1.5rem',
-              color: 'var(--gold)',
+              color: 'var(--primary)',
               padding: '0',
             }}
           >
@@ -57,7 +64,7 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
                   background: 'white',
                   borderRadius: '8px',
                   boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
-                  border: '1px solid rgba(201,168,76,0.2)',
+                  border: '1px solid var(--border)',
                   overflow: 'hidden',
                   zIndex: 10,
                 }}
@@ -101,7 +108,7 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
         </div>
       )}
 
-      {/* Photo avec bordure dorée animée */}
+      {/* Photo avec bordure colorée animée */}
       <motion.div
         whileHover={{ scale: 1.05 }}
         style={{
@@ -109,18 +116,27 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
           borderRadius: '50%',
           overflow: 'hidden',
           border: '3px solid transparent',
-          background: 'linear-gradient(45deg, #C9A84C, #E8C97A, #C9A84C) border-box',
+          background: 'linear-gradient(45deg, var(--primary), var(--primary-light), var(--primary)) border-box',
           WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
           WebkitMaskComposite: 'xor',
           maskComposite: 'exclude',
           padding: '3px',
         }}
       >
-        <img
-          src={user.photo || `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=C9A84C&textColor=FFFFFF`}
-          alt={user.nom}
-          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
-        />
+        {photoUrl ? (
+          <img
+            src={photoUrl}
+            alt={user.nom}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+            onError={(e) => { e.target.onerror = null; e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=4A90E2&textColor=FFFFFF`; }}
+          />
+        ) : (
+          <img
+            src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=4A90E2&textColor=FFFFFF`}
+            alt={user.nom}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+          />
+        )}
       </motion.div>
 
       {/* Informations */}
@@ -135,7 +151,7 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
         </h2>
         <div style={{
           width: '40px', height: '2px',
-          background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)',
+          background: 'linear-gradient(90deg, transparent, var(--primary), transparent)',
           margin: '8px auto',
         }} />
         <p style={{
