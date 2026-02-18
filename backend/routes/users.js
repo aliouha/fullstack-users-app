@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const upload = require('../middleware/upload');
 const { checkOwnership } = require('../middleware/checkRole');
 const {
   getUsers,
@@ -9,9 +10,9 @@ const {
   deleteUser
 } = require('../controllers/usersController');
 
-router.get('/', getUsers);  // Public
-router.post('/', auth, createUser);  // Auth requis
-router.put('/:id', auth, checkOwnership, updateUser);  // Auth + ownership
-router.delete('/:id', auth, checkOwnership, deleteUser);  // Auth + ownership
+router.get('/', getUsers);
+router.post('/', auth, upload.single('photo'), createUser);
+router.put('/:id', auth, checkOwnership, upload.single('photo'), updateUser);
+router.delete('/:id', auth, checkOwnership, deleteUser);
 
 module.exports = router;

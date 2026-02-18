@@ -12,7 +12,9 @@ exports.getUsers = async (req, res) => {
 
 // CREATE - users ne peuvent créer qu'une seule card
 exports.createUser = async (req, res) => {
-  const { photo, nom, prenom, description } = req.body;
+  // Les données peuvent venir de req.body (JSON) ou de req.file + req.body (FormData)
+  const photo = req.file ? `/uploads/${req.file.filename}` : req.body.photo || '';
+  const { nom, prenom, description } = req.body;
 
   try {
     // Vérifie le rôle
@@ -41,7 +43,8 @@ exports.createUser = async (req, res) => {
 // UPDATE - vérifié par middleware
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { photo, nom, prenom, description } = req.body;
+  const photo = req.file ? `/uploads/${req.file.filename}` : req.body.photo || '';
+  const { nom, prenom, description } = req.body;
 
   try {
     const result = await pool.query(
