@@ -33,12 +33,12 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
           borderRadius: '8px',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           fontSize: '16px', fontWeight: '700', color: '#FFFFFF'
-        }}>U</div>
+        }}>FN</div>
         <span style={{
           fontFamily: 'Cormorant Garamond, serif',
           fontSize: '1.4rem', fontWeight: '500',
           color: 'var(--text)', letterSpacing: '0.05em'
-        }}>UserManager</span>
+        }}>FriendNet</span>
       </motion.div>
 
       {/* Message de bienvenue animé (centré) */}

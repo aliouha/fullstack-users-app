@@ -155,30 +155,80 @@ export default function App() {
       />
 
       <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "3rem 1.5rem" }}>
-        {/* Hero section (gardée mais on peut la supprimer si voulu) */}
+        {/* Hero section avec texte animé */}
         <motion.section
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           style={{
             textAlign: "center",
-            marginBottom: "2rem",
+            marginBottom: "3rem",
           }}
         >
           <motion.h1
-            initial={{ scale: 0.9 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+            initial={{ scale: 0.95 }}
+            animate={{ 
+              scale: 1,
+              color: ['#2C3E50', '#4A90E2', '#2C3E50'],
+            }}
+            transition={{ 
+              scale: { delay: 0.2, type: "spring", stiffness: 100 },
+              color: { duration: 3, repeat: Infinity, ease: "easeInOut" }
+            }}
             style={{
               fontFamily: "Cormorant Garamond, serif",
-              fontSize: "clamp(2rem, 6vw, 3rem)",
-              fontWeight: "400",
-              color: "var(--text)",
-              lineHeight: 1.1,
+              fontSize: "clamp(1.8rem, 5vw, 2.8rem)",
+              fontWeight: "700",
+              lineHeight: 1.3,
+              background: 'linear-gradient(135deg, var(--primary), var(--primary-light))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
             }}
           >
-            Découvrez les profils
+            {user 
+              ? "Bienvenue sur mon réseau d'amitié" 
+              : "Rejoignez mon réseau d'amitié"}
           </motion.h1>
+          
+          {/* Ligne décorative animée */}
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: '100px' }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            style={{
+              height: '3px',
+              background: 'linear-gradient(90deg, transparent, var(--primary), transparent)',
+              margin: '1.5rem auto',
+              borderRadius: '2px',
+            }}
+          />
+
+          {/* Sous-titre avec rôle si connecté */}
+          {user && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8 }}
+              style={{
+                color: 'var(--text-muted)',
+                fontSize: '1rem',
+                marginTop: '0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '8px',
+              }}
+            >
+              {userRole === 'admin' ? (
+                <>👑 <span style={{ color: 'var(--primary)', fontWeight: '600' }}>Mode Administrateur</span></>
+              ) : userCardId ? (
+                <>✓ Vous faites partie du réseau</>
+              ) : (
+                <>💫 Créez votre profil pour rejoindre le réseau</>
+              )}
+            </motion.p>
+          )}
         </motion.section>
 
         {/* Bouton Ajouter (seulement si autorisé) */}
@@ -187,7 +237,7 @@ export default function App() {
             <motion.button
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.05, boxShadow: '0 0 30px var(--primary)' }}
+              whileHover={{ scale: 1.05, boxShadow: '0 8px 25px rgba(74, 144, 226, 0.4)' }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
                 setEditUser(null);
@@ -198,19 +248,62 @@ export default function App() {
                 border: 'none',
                 color: '#FFFFFF',
                 padding: '12px 28px',
-                borderRadius: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
-                fontSize: '0.9rem',
+                fontSize: '0.95rem',
                 fontWeight: '600',
                 fontFamily: 'DM Sans, sans-serif',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
+                boxShadow: '0 4px 15px rgba(74, 144, 226, 0.3)',
               }}
             >
               + Ajouter un profil
             </motion.button>
           </div>
+        )}
+
+        {/* Banner invité */}
+        {!user && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            style={{
+              background: 'rgba(74, 144, 226, 0.08)',
+              border: '1px solid rgba(74, 144, 226, 0.2)',
+              borderRadius: '12px',
+              padding: '1rem 1.5rem',
+              marginBottom: '2rem',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '1rem',
+            }}
+          >
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
+              👁️ Mode lecture — <span style={{ color: 'var(--primary)', fontWeight: '600' }}>Connectez-vous</span> pour rejoindre le réseau
+            </p>
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              onClick={() => setAuthMode('login')}
+              style={{
+                background: 'linear-gradient(135deg, var(--primary), var(--primary-light))',
+                border: 'none',
+                color: 'white',
+                padding: '8px 20px',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '0.85rem',
+                fontWeight: '600',
+                fontFamily: 'DM Sans, sans-serif',
+                boxShadow: '0 2px 10px rgba(74, 144, 226, 0.3)',
+              }}
+            >
+              Se connecter
+            </motion.button>
+          </motion.div>
         )}
 
         {/* Grille responsive */}
@@ -244,7 +337,7 @@ export default function App() {
                 fontSize: "1.3rem",
               }}
             >
-              Aucun utilisateur pour l'instant
+              Le réseau est vide pour l'instant
             </p>
           </motion.div>
         )}
