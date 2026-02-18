@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 
-export default function UserCard({ user, onEdit, onDelete, isAuthenticated, index }) {
+export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -72,8 +72,8 @@ export default function UserCard({ user, onEdit, onDelete, isAuthenticated, inde
         </p>
       </div>
 
-      {/* Buttons (only if authenticated) */}
-      {isAuthenticated && (
+      {/* Buttons (only if canEdit) */}
+      {canEdit && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

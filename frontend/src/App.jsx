@@ -17,21 +17,19 @@ export default function App() {
     const email = localStorage.getItem("email");
     return token ? { token, email } : null;
   });
+  const [userRole, setUserRole] = useState(null);
+  const [userCardId, setUserCardId] = useState(null);
 
-  // Fonction utilitaire pour récupérer les headers avec le token (pour les requêtes JSON)
+  // Fonction utilitaire pour récupérer les headers avec le token
   const getHeaders = () => ({
     "Content-Type": "application/json",
     ...(user ? { Authorization: `Bearer ${user.token}` } : {}),
   });
 
-  // Version de fetchUsers qui accepte un token en paramètre (pour l'appel après connexion)
-  const fetchUsersWithToken = async (token) => {
+  // Fetch users
+  const fetchUsers = async () => {
     try {
-      const headers = {
-        "Content-Type": "application/json",
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      };
-      const res = await fetch(API, { headers });
+      const res = await fetch(API);
       if (!res.ok) throw new Error(`Erreur ${res.status}`);
       const data = await res.json();
       setUsers(Array.isArray(data) ? data : []);
@@ -41,17 +39,29 @@ export default function App() {
     }
   };
 
-  // Fetch classique (utilise l'état user actuel)
-  const fetchUsers = async () => {
-    await fetchUsersWithToken(user?.token);
+  // Récupérer les infos user (rôle et card)
+  const fetchUserInfo = async (token) => {
+    try {
+      const res = await fetch("http://192.168.1.14/api/auth/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const userData = await res.json();
+      setUserRole(userData.role);
+      setUserCardId(userData.user_card_id);
+    } catch (err) {
+      console.error("Erreur récupération infos user:", err);
+    }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []); // Seulement au montage
+    // Si déjà connecté au chargement, récupère les infos
+    if (user?.token) {
+      fetchUserInfo(user.token);
+    }
+  }, []);
 
   const handleSave = async (form) => {
-    // form contient { nom, prenom, description, photo (File) }
     const data = new FormData();
     data.append("nom", form.nom);
     data.append("prenom", form.prenom);
@@ -64,20 +74,28 @@ export default function App() {
     try {
       const res = await fetch(url, {
         method,
-        headers: user ? { Authorization: `Bearer ${user.token}` } : {}, // Pas de Content-Type !
+        headers: user ? { Authorization: `Bearer ${user.token}` } : {},
         body: data,
       });
-      if (!res.ok) throw new Error(`Erreur ${res.status}`);
-      // Si besoin de récupérer l'utilisateur créé/modifié : await res.json()
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || `Erreur ${res.status}`);
+      }
+
+      // Si création par un user, récupère la nouvelle card créée
+      if (!editUser && userRole === "user") {
+        const newUser = await res.json();
+        setUserCardId(newUser.id);
+      }
     } catch (err) {
       console.error("Erreur lors de la sauvegarde:", err);
-      alert("Erreur lors de l'enregistrement");
+      alert(err.message);
       return;
     }
 
     setShowModal(false);
     setEditUser(null);
-    fetchUsers(); // Rafraîchir la liste
+    fetchUsers();
   };
 
   const handleDelete = async (id) => {
@@ -87,11 +105,20 @@ export default function App() {
         method: "DELETE",
         headers: getHeaders(),
       });
-      if (!res.ok) throw new Error(`Erreur ${res.status}`);
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || `Erreur ${res.status}`);
+      }
+
+      // Si user supprime sa propre card, reset userCardId
+      if (id === userCardId) {
+        setUserCardId(null);
+      }
+
       fetchUsers();
     } catch (err) {
       console.error("Erreur suppression:", err);
-      alert("Impossible de supprimer l'utilisateur");
+      alert(err.message);
     }
   };
 
@@ -104,16 +131,26 @@ export default function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
     setUser(null);
-    fetchUsers(); // Pour recharger la liste en mode lecture (si autorisé)
+    setUserRole(null);
+    setUserCardId(null);
+    fetchUsers();
   };
 
-  const handleAuthSuccess = (data) => {
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("email", data.email);
+  const handleAuthSuccess = async (data) => {
     setUser({ token: data.token, email: data.email });
-    // Utiliser le token fraîchement reçu pour recharger les utilisateurs
-    fetchUsersWithToken(data.token);
     setAuthMode(null);
+    await fetchUserInfo(data.token);
+    fetchUsers();
+  };
+
+  // Détermine si l'utilisateur peut ajouter une card
+  const canAddCard = user && (userRole === "admin" || !userCardId);
+
+  // Détermine si l'utilisateur peut éditer/supprimer une card donnée
+  const canEditCard = (cardId) => {
+    if (!user) return false;
+    if (userRole === "admin") return true;
+    return cardId === userCardId;
   };
 
   return (
@@ -176,9 +213,27 @@ export default function App() {
                   ({users.length})
                 </span>
               </h1>
+              {user && (
+                <p style={{ 
+                  color: "var(--text-muted)", 
+                  fontSize: "0.8rem", 
+                  marginTop: "0.5rem",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px"
+                }}>
+                  {userRole === "admin" ? (
+                    <>👑 <span style={{ color: "var(--gold)" }}>Admin</span> - Tous pouvoirs</>
+                  ) : userCardId ? (
+                    <>👤 Vous avez déjà créé votre card</>
+                  ) : (
+                    <>👤 Créez votre card personnelle</>
+                  )}
+                </p>
+              )}
             </div>
 
-            {user && (
+            {canAddCard && (
               <motion.button
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -278,7 +333,7 @@ export default function App() {
                 key={u.id}
                 user={u}
                 index={i}
-                isAuthenticated={!!user}
+                canEdit={canEditCard(u.id)}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
               />

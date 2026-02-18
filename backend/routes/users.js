@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
+const { checkOwnership } = require('../middleware/checkRole');
 const {
   getUsers,
   createUser,
@@ -8,12 +9,9 @@ const {
   deleteUser
 } = require('../controllers/usersController');
 
-// Route publique : GET tous les utilisateurs (accessible sans token)
-router.get('/', getUsers);
-
-// Routes protégées (nécessitent un token valide)
-router.post('/', auth, createUser);
-router.put('/:id', auth, updateUser);
-router.delete('/:id', auth, deleteUser);
+router.get('/', getUsers);  // Public
+router.post('/', auth, createUser);  // Auth requis
+router.put('/:id', auth, checkOwnership, updateUser);  // Auth + ownership
+router.delete('/:id', auth, checkOwnership, deleteUser);  // Auth + ownership
 
 module.exports = router;
