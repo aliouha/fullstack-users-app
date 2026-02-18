@@ -7,16 +7,13 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
   // Construire l'URL complète de la photo
   const getPhotoUrl = () => {
     if (!user.photo) {
-      return `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=1A1A1E&textColor=C9A84C`;
+      return `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=4A90E2&textColor=FFFFFF`;
     }
     
-    // Si la photo commence par http, c'est déjà une URL complète
     if (user.photo.startsWith('http')) {
       return user.photo;
     }
     
-    // Sinon, c'est un chemin relatif type "/uploads/..." ou "uploads/..."
-    // On construit l'URL complète
     const photoPath = user.photo.startsWith('/') ? user.photo : `/${user.photo}`;
     return `http://192.168.1.14${photoPath}`;
   }
@@ -26,32 +23,29 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
-      whileHover={{ y: -6, boxShadow: '0 20px 60px rgba(201,168,76,0.12)' }}
+      whileHover={{ 
+        y: -8, 
+        boxShadow: '0 25px 40px -15px rgba(74, 144, 226, 0.4)',
+        rotateX: 0,
+      }}
       style={{
-        background: 'linear-gradient(145deg, #1A1A1E, #111113)',
-        border: '1px solid rgba(201,168,76,0.12)',
-        borderRadius: '16px',
-        padding: '2rem',
+        background: 'var(--card-bg)',
+        borderRadius: '20px',
+        padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
         position: 'relative',
-        overflow: 'hidden',
-        cursor: 'default',
+        boxShadow: 'var(--shadow)',
+        border: '1px solid var(--border)',
+        transform: 'perspective(1000px) rotateX(2deg)',
+        transition: 'transform 0.3s, box-shadow 0.3s',
       }}
     >
-      {/* Decorative corner */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0,
-        width: '60px', height: '60px',
-        background: 'linear-gradient(135deg, rgba(201,168,76,0.08), transparent)',
-        borderBottomLeftRadius: '60px',
-      }} />
-
       {/* Menu trois points */}
       {canEdit && (
-        <div style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 5 }}>
+        <div style={{ position: 'absolute', top: '15px', right: '15px', zIndex: 10 }}>
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
@@ -61,7 +55,7 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
               border: 'none',
               cursor: 'pointer',
               fontSize: '1.5rem',
-              color: 'var(--gold)',
+              color: 'var(--primary)',
               padding: '0',
             }}
           >
@@ -78,12 +72,12 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
                   position: 'absolute',
                   top: '30px',
                   right: '0',
-                  background: '#1A1A1E',
+                  background: 'white',
                   borderRadius: '8px',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.3)',
-                  border: '1px solid rgba(201,168,76,0.2)',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  border: '1px solid var(--border)',
                   overflow: 'hidden',
-                  zIndex: 10,
+                  zIndex: 20,
                 }}
               >
                 <button
@@ -95,12 +89,13 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
                     width: '100%',
                     textAlign: 'left',
                     cursor: 'pointer',
-                    color: 'var(--gold)',
+                    color: 'var(--text)',
                     fontSize: '0.9rem',
                     fontFamily: 'DM Sans, sans-serif',
-                    borderBottom: '1px solid rgba(201,168,76,0.1)',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
+                    transition: 'background 0.2s',
                   }}
-                  onMouseEnter={(e) => e.target.style.background = 'rgba(201,168,76,0.1)'}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(74, 144, 226, 0.1)'}
                   onMouseLeave={(e) => e.target.style.background = 'transparent'}
                 >
                   Modifier
@@ -117,8 +112,9 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
                     color: '#EF4444',
                     fontSize: '0.9rem',
                     fontFamily: 'DM Sans, sans-serif',
+                    transition: 'background 0.2s',
                   }}
-                  onMouseEnter={(e) => e.target.style.background = 'rgba(239,68,68,0.1)'}
+                  onMouseEnter={(e) => e.target.style.background = 'rgba(239, 68, 68, 0.1)'}
                   onMouseLeave={(e) => e.target.style.background = 'transparent'}
                 >
                   Supprimer
@@ -129,48 +125,72 @@ export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
         </div>
       )}
 
-      {/* Photo */}
+      {/* Photo avec bordure 3D animée */}
       <motion.div
-        whileHover={{ scale: 1.05 }}
+        whileHover={{ scale: 1.08, rotate: 2 }}
         style={{
-          width: '90px', height: '90px',
+          width: '110px', 
+          height: '110px',
           borderRadius: '50%',
-          overflow: 'hidden',
-          border: '2px solid rgba(201,168,76,0.3)',
-          boxShadow: '0 0 30px rgba(201,168,76,0.1)',
+          position: 'relative',
+          background: 'linear-gradient(135deg, #4A90E2, #67B5FF, #4A90E2, #357ABD)',
+          backgroundSize: '300% 300%',
+          padding: '4px',
+          animation: 'gradientShift 3s ease infinite',
+          boxShadow: '0 8px 25px rgba(74, 144, 226, 0.4), inset 0 1px 0 rgba(255,255,255,0.3)',
         }}
       >
-        <img
-          src={getPhotoUrl()}
-          alt={user.nom}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          onError={(e) => {
-            console.error('Erreur chargement photo:', user.photo);
-            e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=1A1A1E&textColor=C9A84C`;
-          }}
-        />
+        <style>{`
+          @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+          }
+        `}</style>
+        <div style={{
+          width: '100%',
+          height: '100%',
+          borderRadius: '50%',
+          overflow: 'hidden',
+          border: '2px solid white',
+          boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.1)',
+        }}>
+          <img
+            src={getPhotoUrl()}
+            alt={user.nom}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=4A90E2&textColor=FFFFFF`;
+            }}
+          />
+        </div>
       </motion.div>
 
-      {/* Info */}
+      {/* Informations */}
       <div style={{ textAlign: 'center' }}>
         <h2 style={{
           fontFamily: 'Cormorant Garamond, serif',
-          fontSize: '1.3rem', fontWeight: '500',
-          color: '#F0EDE8', letterSpacing: '0.03em',
+          fontSize: '1.4rem', 
+          fontWeight: '500',
+          color: 'var(--text)', 
+          letterSpacing: '0.03em',
           marginBottom: '4px'
         }}>
           {user.prenom} {user.nom}
         </h2>
         <div style={{
-          width: '30px', height: '1px',
-          background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)',
-          margin: '8px auto',
+          width: '50px', 
+          height: '3px',
+          background: 'linear-gradient(90deg, transparent, var(--primary), transparent)',
+          margin: '10px auto',
+          borderRadius: '2px',
         }} />
         <p style={{
           color: 'var(--text-muted)',
-          fontSize: '0.85rem',
-          lineHeight: '1.5',
-          maxWidth: '200px'
+          fontSize: '0.9rem',
+          lineHeight: '1.6',
+          maxWidth: '220px'
         }}>
           {user.description || 'Aucune description'}
         </p>
