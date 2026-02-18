@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar";
 import UserCard from "./components/UserCard";
 import UserModal from "./components/UserModal";
 import AuthModal from "./components/AuthModal";
+import "./index.css";
 
 const API = "http://192.168.1.14/api/users";
 
@@ -20,13 +21,11 @@ export default function App() {
   const [userRole, setUserRole] = useState(null);
   const [userCardId, setUserCardId] = useState(null);
 
-  // Fonction utilitaire pour récupérer les headers avec le token
   const getHeaders = () => ({
     "Content-Type": "application/json",
     ...(user ? { Authorization: `Bearer ${user.token}` } : {}),
   });
 
-  // Fetch users
   const fetchUsers = async () => {
     try {
       const res = await fetch(API);
@@ -39,7 +38,6 @@ export default function App() {
     }
   };
 
-  // Récupérer les infos user (rôle et card)
   const fetchUserInfo = async (token) => {
     try {
       const res = await fetch("http://192.168.1.14/api/auth/me", {
@@ -55,7 +53,6 @@ export default function App() {
 
   useEffect(() => {
     fetchUsers();
-    // Si déjà connecté au chargement, récupère les infos
     if (user?.token) {
       fetchUserInfo(user.token);
     }
@@ -82,7 +79,6 @@ export default function App() {
         throw new Error(error.error || `Erreur ${res.status}`);
       }
 
-      // Si création par un user, récupère la nouvelle card créée
       if (!editUser && userRole === "user") {
         const newUser = await res.json();
         setUserCardId(newUser.id);
@@ -110,7 +106,6 @@ export default function App() {
         throw new Error(error.error || `Erreur ${res.status}`);
       }
 
-      // Si user supprime sa propre card, reset userCardId
       if (id === userCardId) {
         setUserCardId(null);
       }
@@ -143,10 +138,7 @@ export default function App() {
     fetchUsers();
   };
 
-  // Détermine si l'utilisateur peut ajouter une card
   const canAddCard = user && (userRole === "admin" || !userCardId);
-
-  // Détermine si l'utilisateur peut éditer/supprimer une card donnée
   const canEditCard = (cardId) => {
     if (!user) return false;
     if (userRole === "admin") return true;
@@ -154,7 +146,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--dark)" }}>
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
       <Navbar
         user={user}
         onLogout={handleLogout}
@@ -162,10 +154,51 @@ export default function App() {
         onRegister={() => setAuthMode("register")}
       />
 
-      <main
-        style={{ maxWidth: "1200px", margin: "0 auto", padding: "3rem 1.5rem" }}
-      >
-        {/* Header */}
+      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "3rem 1.5rem" }}>
+        {/* Hero section inspirée de l'image 1 */}
+        <motion.section
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          style={{
+            textAlign: "center",
+            marginBottom: "4rem",
+            padding: "2rem",
+            background: "linear-gradient(135deg, rgba(201,168,76,0.05), rgba(255,255,255,0.5))",
+            borderRadius: "40px",
+          }}
+        >
+          <motion.h1
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+            style={{
+              fontFamily: "Cormorant Garamond, serif",
+              fontSize: "clamp(2.5rem, 8vw, 4rem)",
+              fontWeight: "400",
+              color: "var(--text)",
+              lineHeight: 1.1,
+              marginBottom: "0.5rem",
+            }}
+          >
+            Découvrez notre réseau
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            style={{
+              color: "var(--text-muted)",
+              fontSize: "1.1rem",
+              maxWidth: "600px",
+              margin: "0 auto",
+            }}
+          >
+            Explorez les profils, connectez-vous et partagez votre univers.
+          </motion.p>
+        </motion.section>
+
+        {/* Header avec compteur et bouton ajouter */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -198,7 +231,7 @@ export default function App() {
                   fontFamily: "Cormorant Garamond, serif",
                   fontSize: "clamp(2rem, 5vw, 3rem)",
                   fontWeight: "400",
-                  color: "#F0EDE8",
+                  color: "var(--text)",
                   lineHeight: 1.1,
                 }}
               >
@@ -249,7 +282,7 @@ export default function App() {
                 style={{
                   background: "linear-gradient(135deg, #C9A84C, #E8C97A)",
                   border: "none",
-                  color: "#0A0A0B",
+                  color: "#FFFFFF",
                   padding: "12px 28px",
                   borderRadius: "8px",
                   cursor: "pointer",
@@ -266,67 +299,17 @@ export default function App() {
             )}
           </div>
 
-          {/* Divider */}
           <div
             style={{
               height: "1px",
-              background:
-                "linear-gradient(90deg, rgba(201,168,76,0.3), transparent)",
+              background: "linear-gradient(90deg, rgba(201,168,76,0.3), transparent)",
               marginTop: "1.5rem",
             }}
           />
         </motion.div>
 
-        {/* Guest banner */}
-        {!user && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            style={{
-              background: "rgba(201,168,76,0.06)",
-              border: "1px solid rgba(201,168,76,0.15)",
-              borderRadius: "12px",
-              padding: "1rem 1.5rem",
-              marginBottom: "2rem",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              flexWrap: "wrap",
-              gap: "1rem",
-            }}
-          >
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>
-              👁️ Mode lecture —{" "}
-              <span style={{ color: "var(--gold)" }}>Connectez-vous</span> pour
-              gérer les utilisateurs
-            </p>
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              onClick={() => setAuthMode("login")}
-              style={{
-                background: "rgba(201,168,76,0.1)",
-                border: "1px solid rgba(201,168,76,0.3)",
-                color: "var(--gold)",
-                padding: "7px 20px",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontSize: "0.85rem",
-                fontFamily: "DM Sans, sans-serif",
-              }}
-            >
-              Se connecter
-            </motion.button>
-          </motion.div>
-        )}
-
-        {/* Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "1.5rem",
-          }}
-        >
+        {/* Grille responsive */}
+        <div className="user-grid">
           <AnimatePresence>
             {users.map((u, i) => (
               <UserCard
@@ -341,7 +324,7 @@ export default function App() {
           </AnimatePresence>
         </div>
 
-        {/* Empty state */}
+        {/* État vide */}
         {users.length === 0 && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -362,7 +345,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Modals */}
+      {/* Modales */}
       <AnimatePresence>
         {showModal && (
           <UserModal

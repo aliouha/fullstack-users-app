@@ -4,25 +4,41 @@
 :root {
   --gold: #C9A84C;
   --gold-light: #E8C97A;
-  --dark: #0A0A0B;
-  --dark-2: #111113;
-  --dark-3: #1A1A1E;
-  --dark-4: #242428;
-  --border: rgba(201, 168, 76, 0.15);
-  --text: #F0EDE8;
-  --text-muted: #8A8680;
+  --bg: #F9F7F4;
+  --card-bg: #FFFFFF;
+  --text: #1E1E1E;
+  --text-muted: #6B6B6B;
+  --border: rgba(0,0,0,0.05);
+  --shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: var(--dark);
+  background-color: var(--bg);
   color: var(--text);
   font-family: 'DM Sans', sans-serif;
   min-height: 100vh;
 }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--dark-2); }
-::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #f0f0f0; }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
 
+/* Grille responsive */
+.user-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+  .user-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .user-grid {
+    grid-template-columns: 1fr;
+  }
+}

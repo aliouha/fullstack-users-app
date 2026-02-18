@@ -1,16 +1,14 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 export default function Navbar({ user, onLogout, onLogin, onRegister }) {
-  const [menuOpen, setMenuOpen] = useState(false)
-
   return (
     <motion.nav
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       style={{
-        background: 'rgba(10,10,11,0.85)',
+        background: 'rgba(255,255,255,0.8)',
         backdropFilter: 'blur(20px)',
         borderBottom: '1px solid rgba(201,168,76,0.2)',
         position: 'sticky',
@@ -23,26 +21,48 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
         justifyContent: 'space-between',
       }}
     >
-      {/* Logo */}
-      <motion.div
-        style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
-        whileHover={{ scale: 1.02 }}
-      >
-        <div style={{
-          width: '36px', height: '36px',
-          background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
-          borderRadius: '8px',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '16px', fontWeight: '700', color: '#0A0A0B'
-        }}>U</div>
-        <span style={{
-          fontFamily: 'Cormorant Garamond, serif',
-          fontSize: '1.4rem', fontWeight: '500',
-          color: '#F0EDE8', letterSpacing: '0.05em'
-        }}>UserManager</span>
-      </motion.div>
+      {/* Logo + message animé */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <motion.div
+          style={{ display: 'flex', alignItems: 'center', gap: '12px' }}
+          whileHover={{ scale: 1.02 }}
+        >
+          <div style={{
+            width: '36px', height: '36px',
+            background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
+            borderRadius: '8px',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '16px', fontWeight: '700', color: '#FFFFFF'
+          }}>U</div>
+          <span style={{
+            fontFamily: 'Cormorant Garamond, serif',
+            fontSize: '1.4rem', fontWeight: '500',
+            color: '#1E1E1E', letterSpacing: '0.05em'
+          }}>UserManager</span>
+        </motion.div>
 
-      {/* Auth buttons */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          style={{
+            background: 'rgba(201,168,76,0.1)',
+            padding: '6px 14px',
+            borderRadius: '30px',
+            border: '1px solid rgba(201,168,76,0.3)',
+          }}
+        >
+          <motion.span
+            animate={{ scale: [1, 1.02, 1] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            style={{ color: 'var(--gold)', fontSize: '0.85rem', fontWeight: '500' }}
+          >
+            ✦ Bienvenue sur mon réseau ✦
+          </motion.span>
+        </motion.div>
+      </div>
+
+      {/* Boutons d'authentification */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {user ? (
           <>
@@ -92,7 +112,7 @@ export default function Navbar({ user, onLogout, onLogin, onRegister }) {
               style={{
                 background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
                 border: 'none',
-                color: '#0A0A0B',
+                color: '#FFFFFF',
                 padding: '8px 20px',
                 borderRadius: '6px',
                 cursor: 'pointer',

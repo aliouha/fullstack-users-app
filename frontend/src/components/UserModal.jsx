@@ -37,11 +37,11 @@ export default function UserModal({ onClose, onSave, editUser }) {
   const handleSubmit = (e) => { e.preventDefault(); onSave(form) }
 
   const inputStyle = {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(201,168,76,0.15)',
+    background: 'rgba(0,0,0,0.02)',
+    border: '1px solid rgba(201,168,76,0.2)',
     borderRadius: '8px',
     padding: '12px 16px',
-    color: '#F0EDE8',
+    color: 'var(--text)',
     fontSize: '0.9rem',
     fontFamily: 'DM Sans, sans-serif',
     outline: 'none',
@@ -58,7 +58,7 @@ export default function UserModal({ onClose, onSave, editUser }) {
         onClick={onClose}
         style={{
           position: 'fixed', inset: 0,
-          background: 'rgba(0,0,0,0.8)',
+          background: 'rgba(0,0,0,0.3)',
           backdropFilter: 'blur(8px)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           zIndex: 200, padding: '1rem',
@@ -71,18 +71,18 @@ export default function UserModal({ onClose, onSave, editUser }) {
           transition={{ duration: 0.3, ease: 'easeOut' }}
           onClick={e => e.stopPropagation()}
           style={{
-            background: '#111113',
-            border: '1px solid rgba(201,168,76,0.2)',
+            background: 'white',
+            border: '1px solid rgba(201,168,76,0.3)',
             borderRadius: '20px',
             padding: '2.5rem',
             width: '100%', maxWidth: '440px',
-            boxShadow: '0 40px 100px rgba(0,0,0,0.6)',
+            boxShadow: '0 40px 100px rgba(0,0,0,0.2)',
           }}
         >
           <h2 style={{
             fontFamily: 'Cormorant Garamond, serif',
             fontSize: '1.8rem', fontWeight: '500',
-            color: '#F0EDE8', marginBottom: '0.5rem'
+            color: 'var(--text)', marginBottom: '0.5rem'
           }}>
             {editUser ? 'Modifier' : 'Nouvel'} utilisateur
           </h2>
@@ -94,7 +94,7 @@ export default function UserModal({ onClose, onSave, editUser }) {
               <div style={{
                 width: '80px', height: '80px', borderRadius: '50%', overflow: 'hidden',
                 border: '2px solid rgba(201,168,76,0.3)',
-                background: '#1A1A1E',
+                background: '#f0f0f0',
                 display: 'flex', alignItems: 'center', justifyContent: 'center'
               }}>
                 {preview
@@ -104,8 +104,8 @@ export default function UserModal({ onClose, onSave, editUser }) {
               </div>
               <label style={{
                 cursor: 'pointer',
-                background: 'rgba(201,168,76,0.08)',
-                border: '1px solid rgba(201,168,76,0.2)',
+                background: 'rgba(201,168,76,0.1)',
+                border: '1px solid rgba(201,168,76,0.3)',
                 color: 'var(--gold)', padding: '6px 16px',
                 borderRadius: '6px', fontSize: '0.8rem',
                 fontFamily: 'DM Sans, sans-serif',
@@ -115,19 +115,19 @@ export default function UserModal({ onClose, onSave, editUser }) {
               </label>
             </div>
 
-            <input name="prenom" placeholder="Prénom" value={form.prenom} onChange={handleChange} required style={inputStyle} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'} />
-            <input name="nom" placeholder="Nom" value={form.nom} onChange={handleChange} required style={inputStyle} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'} />
-            <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} rows={3} style={{ ...inputStyle, resize: 'none' }} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.5)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'} />
+            <input name="prenom" placeholder="Prénom" value={form.prenom} onChange={handleChange} required style={inputStyle} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.8)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.2)'} />
+            <input name="nom" placeholder="Nom" value={form.nom} onChange={handleChange} required style={inputStyle} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.8)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.2)'} />
+            <textarea name="description" placeholder="Description" value={form.description} onChange={handleChange} rows={3} style={{ ...inputStyle, resize: 'none' }} onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.8)'} onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.2)'} />
 
             <div style={{ display: 'flex', gap: '10px', marginTop: '0.5rem' }}>
               <motion.button
                 type="submit" disabled={uploading}
-                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(201,168,76,0.25)' }}
+                whileHover={{ scale: 1.02, boxShadow: '0 0 20px rgba(201,168,76,0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 style={{
                   flex: 1,
                   background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
-                  border: 'none', color: '#0A0A0B',
+                  border: 'none', color: '#FFFFFF',
                   padding: '12px', borderRadius: '8px',
                   cursor: 'pointer', fontSize: '0.9rem',
                   fontWeight: '500', fontFamily: 'DM Sans, sans-serif',
@@ -141,8 +141,8 @@ export default function UserModal({ onClose, onSave, editUser }) {
                 whileTap={{ scale: 0.98 }}
                 style={{
                   flex: 1,
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.08)',
+                  background: 'rgba(0,0,0,0.02)',
+                  border: '1px solid rgba(0,0,0,0.1)',
                   color: 'var(--text-muted)',
                   padding: '12px', borderRadius: '8px',
                   cursor: 'pointer', fontSize: '0.9rem',

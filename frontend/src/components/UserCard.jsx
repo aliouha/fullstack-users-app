@@ -1,122 +1,152 @@
-import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 
 export default function UserCard({ user, onEdit, onDelete, canEdit, index }) {
+  const [showMenu, setShowMenu] = useState(false)
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
-      whileHover={{ y: -6, boxShadow: '0 20px 60px rgba(201,168,76,0.12)' }}
+      whileHover={{ y: -8, boxShadow: '0 25px 40px -15px rgba(201,168,76,0.3)' }}
       style={{
-        background: 'linear-gradient(145deg, #1A1A1E, #111113)',
-        border: '1px solid rgba(201,168,76,0.12)',
-        borderRadius: '16px',
-        padding: '2rem',
+        background: 'var(--card-bg)',
+        borderRadius: '20px',
+        padding: '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: '1rem',
         position: 'relative',
-        overflow: 'hidden',
-        cursor: 'default',
+        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.05)',
+        border: '1px solid rgba(201,168,76,0.2)',
+        transform: 'perspective(1000px) rotateX(2deg)',
+        transition: 'transform 0.2s, box-shadow 0.2s',
       }}
     >
-      {/* Decorative corner */}
-      <div style={{
-        position: 'absolute', top: 0, right: 0,
-        width: '60px', height: '60px',
-        background: 'linear-gradient(135deg, rgba(201,168,76,0.08), transparent)',
-        borderBottomLeftRadius: '60px',
-      }} />
+      {/* Menu trois points (si autorisé) */}
+      {canEdit && (
+        <div style={{ position: 'absolute', top: '15px', right: '15px' }}>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowMenu(!showMenu)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.5rem',
+              color: 'var(--gold)',
+              padding: '0',
+            }}
+          >
+            ⋮
+          </motion.button>
+          <AnimatePresence>
+            {showMenu && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                transition={{ duration: 0.2 }}
+                style={{
+                  position: 'absolute',
+                  top: '30px',
+                  right: '0',
+                  background: 'white',
+                  borderRadius: '8px',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                  border: '1px solid rgba(201,168,76,0.2)',
+                  overflow: 'hidden',
+                  zIndex: 10,
+                }}
+              >
+                <button
+                  onClick={() => { onEdit(user); setShowMenu(false); }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '10px 20px',
+                    width: '100%',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    color: 'var(--text)',
+                    fontSize: '0.9rem',
+                    fontFamily: 'DM Sans, sans-serif',
+                    borderBottom: '1px solid rgba(0,0,0,0.05)',
+                  }}
+                >
+                  Modifier
+                </button>
+                <button
+                  onClick={() => { onDelete(user.id); setShowMenu(false); }}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    padding: '10px 20px',
+                    width: '100%',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    color: '#EF4444',
+                    fontSize: '0.9rem',
+                    fontFamily: 'DM Sans, sans-serif',
+                  }}
+                >
+                  Supprimer
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      )}
 
-      {/* Photo */}
+      {/* Photo avec bordure dorée animée */}
       <motion.div
         whileHover={{ scale: 1.05 }}
         style={{
-          width: '90px', height: '90px',
+          width: '100px', height: '100px',
           borderRadius: '50%',
           overflow: 'hidden',
-          border: '2px solid rgba(201,168,76,0.3)',
-          boxShadow: '0 0 30px rgba(201,168,76,0.1)',
+          border: '3px solid transparent',
+          background: 'linear-gradient(45deg, #C9A84C, #E8C97A, #C9A84C) border-box',
+          WebkitMask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+          WebkitMaskComposite: 'xor',
+          maskComposite: 'exclude',
+          padding: '3px',
         }}
       >
         <img
-          src={user.photo || `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=1A1A1E&textColor=C9A84C`}
+          src={user.photo || `https://api.dicebear.com/7.x/initials/svg?seed=${user.prenom}&backgroundColor=C9A84C&textColor=FFFFFF`}
           alt={user.nom}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
         />
       </motion.div>
 
-      {/* Info */}
+      {/* Informations */}
       <div style={{ textAlign: 'center' }}>
         <h2 style={{
           fontFamily: 'Cormorant Garamond, serif',
-          fontSize: '1.3rem', fontWeight: '500',
-          color: '#F0EDE8', letterSpacing: '0.03em',
+          fontSize: '1.4rem', fontWeight: '500',
+          color: 'var(--text)', letterSpacing: '0.03em',
           marginBottom: '4px'
         }}>
           {user.prenom} {user.nom}
         </h2>
         <div style={{
-          width: '30px', height: '1px',
+          width: '40px', height: '2px',
           background: 'linear-gradient(90deg, transparent, #C9A84C, transparent)',
           margin: '8px auto',
         }} />
         <p style={{
           color: 'var(--text-muted)',
-          fontSize: '0.85rem',
+          fontSize: '0.9rem',
           lineHeight: '1.5',
           maxWidth: '200px'
         }}>
           {user.description || 'Aucune description'}
         </p>
       </div>
-
-      {/* Buttons (only if canEdit) */}
-      {canEdit && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          style={{ display: 'flex', gap: '8px', marginTop: '4px' }}
-        >
-          <motion.button
-            whileHover={{ scale: 1.05, background: 'rgba(201,168,76,0.15)' }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onEdit(user)}
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(201,168,76,0.3)',
-              color: 'var(--gold)',
-              padding: '6px 18px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-              fontFamily: 'DM Sans, sans-serif',
-              transition: 'background 0.2s',
-            }}
-          >
-            Modifier
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05, background: 'rgba(239,68,68,0.1)', borderColor: 'rgba(239,68,68,0.4)' }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => onDelete(user.id)}
-            style={{
-              background: 'transparent',
-              border: '1px solid rgba(239,68,68,0.2)',
-              color: '#EF4444',
-              padding: '6px 18px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontSize: '0.8rem',
-              fontFamily: 'DM Sans, sans-serif',
-              transition: 'all 0.2s',
-            }}
-          >
-            Supprimer
-          </motion.button>
-        </motion.div>
-      )}
     </motion.div>
   )
 }

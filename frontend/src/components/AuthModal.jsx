@@ -1,4 +1,3 @@
-
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
@@ -32,10 +31,10 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
   }
 
   const inputStyle = {
-    background: 'rgba(255,255,255,0.04)',
-    border: '1px solid rgba(201,168,76,0.15)',
+    background: 'rgba(0,0,0,0.02)',
+    border: '1px solid rgba(201,168,76,0.2)',
     borderRadius: '8px', padding: '12px 16px',
-    color: '#F0EDE8', fontSize: '0.9rem',
+    color: 'var(--text)', fontSize: '0.9rem',
     fontFamily: 'DM Sans, sans-serif',
     outline: 'none', width: '100%',
   }
@@ -46,7 +45,7 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         onClick={onClose}
         style={{
-          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.85)',
+          position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)',
           backdropFilter: 'blur(10px)', display: 'flex',
           alignItems: 'center', justifyContent: 'center',
           zIndex: 200, padding: '1rem',
@@ -59,14 +58,13 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
           transition={{ duration: 0.35, ease: 'easeOut' }}
           onClick={e => e.stopPropagation()}
           style={{
-            background: '#111113',
-            border: '1px solid rgba(201,168,76,0.2)',
+            background: 'white',
+            border: '1px solid rgba(201,168,76,0.3)',
             borderRadius: '20px', padding: '2.5rem',
             width: '100%', maxWidth: '400px',
-            boxShadow: '0 40px 100px rgba(0,0,0,0.7)',
+            boxShadow: '0 40px 100px rgba(0,0,0,0.2)',
           }}
         >
-          {/* Header */}
           <div style={{ marginBottom: '2rem' }}>
             <div style={{
               width: '44px', height: '44px',
@@ -74,11 +72,11 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
               borderRadius: '10px', display: 'flex',
               alignItems: 'center', justifyContent: 'center',
               fontSize: '20px', fontWeight: '700',
-              color: '#0A0A0B', marginBottom: '1.2rem'
+              color: '#FFFFFF', marginBottom: '1.2rem'
             }}>U</div>
             <h2 style={{
               fontFamily: 'Cormorant Garamond, serif',
-              fontSize: '2rem', fontWeight: '500', color: '#F0EDE8',
+              fontSize: '2rem', fontWeight: '500', color: 'var(--text)',
             }}>
               {mode === 'login' ? 'Bon retour' : 'Créer un compte'}
             </h2>
@@ -92,15 +90,15 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
               name="email" type="email" placeholder="Email"
               value={form.email} onChange={handleChange} required
               style={inputStyle}
-              onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-              onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'}
+              onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.8)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.2)'}
             />
             <input
               name="password" type="password" placeholder="Mot de passe"
               value={form.password} onChange={handleChange} required
               style={inputStyle}
-              onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.5)'}
-              onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.15)'}
+              onFocus={e => e.target.style.borderColor = 'rgba(201,168,76,0.8)'}
+              onBlur={e => e.target.style.borderColor = 'rgba(201,168,76,0.2)'}
             />
 
             {error && (
@@ -122,7 +120,7 @@ export default function AuthModal({ mode, onClose, onSuccess }) {
               whileTap={{ scale: 0.98 }}
               style={{
                 background: 'linear-gradient(135deg, #C9A84C, #E8C97A)',
-                border: 'none', color: '#0A0A0B',
+                border: 'none', color: '#FFFFFF',
                 padding: '13px', borderRadius: '8px',
                 cursor: loading ? 'not-allowed' : 'pointer',
                 fontSize: '0.9rem', fontWeight: '600',
